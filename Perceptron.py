@@ -100,7 +100,7 @@ class MultilayerPerceptron:
             for h in range(len(self.network[i])):         # Iterates through Perceptrons in each layer
                 fwd_error = 0.0
                 for k in range(self.layers[i+1]):         # Iterates through neurons in each layer
-                    fwd_error += self.network[i][k].weights[h] * self.d[i+1][k]
+                    fwd_error += self.network[i+1][k].weights[h] * self.d[i+1][k]
                 self.d[i][h] = self.values[i][h] * (1-self.values[i][h]) * fwd_error
 
         # STEP 5 & 6: Calculate the deltas and update the weights
@@ -120,22 +120,30 @@ class MultilayerPerceptron:
 
 
 #test code
-mlp = MultilayerPerceptron(layers=[2,2,1])
-print("\nTraining Neural Network as an XOR Gate...\n")
-for i in range(3000):
+
+mlp = MultilayerPerceptron(layers=[7,7,10])
+epochs = 3000
+print("\nTraining Neural Network for the display...\n")
+for i in range(epochs):
     MSE = 0.0
-    MSE += mlp.bp([0,0],[0])
-    MSE += mlp.bp([0,1],[1])
-    MSE += mlp.bp([1,0],[1])
-    MSE += mlp.bp([1,1],[0])
-    MSE = MSE / 4
+    MSE += mlp.bp([1, 1, 1, 1, 1, 1, 0], [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]) #0
+    MSE += mlp.bp([0, 1, 1, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0, 0, 0, 0, 0]) #1
+    MSE += mlp.bp([1, 1, 0, 1, 1, 0, 1], [0, 0, 1, 0, 0, 0, 0, 0, 0, 0]) #2
+    MSE += mlp.bp([1, 1, 1, 1, 0, 0, 1], [0, 0, 0, 1, 0, 0, 0, 0, 0, 0]) #3
+    MSE += mlp.bp([0, 1, 1, 0, 0, 1, 1], [0, 0, 0, 0, 1, 0, 0, 0, 0, 0]) #4
+    MSE += mlp.bp([1, 0, 1, 1, 0, 1, 1], [0, 0, 0, 0, 0, 1, 0, 0, 0, 0]) #5
+    MSE += mlp.bp([1, 0, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0, 1, 0, 0, 0]) #6
+    MSE += mlp.bp([1, 1, 1, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 1, 0, 0]) #7
+    MSE += mlp.bp([1, 1, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0, 0, 0, 1, 0]) #8
+    MSE += mlp.bp([1, 1, 1, 1, 0, 1, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1]) #9
+    MSE = MSE / 10
     if(i%100 == 0):
         print (MSE)
 
 mlp.printWeights()
     
 print("MLP:")
-print ("0 0 = {0:.10f}".format(mlp.run([0,0])[0]))
-print ("0 1 = {0:.10f}".format(mlp.run([0,1])[0]))
-print ("1 0 = {0:.10f}".format(mlp.run([1,0])[0]))
-print ("1 1 = {0:.10f}".format(mlp.run([1,1])[0]))
+print ("1 1 1 1 1 1 0 = " + str(mlp.run([0.66, 0.44, 0.47, 0.47, 0.01, 0.01, 0.28])))
+#print ("0 1 = {0:.10f}".format(mlp.run([0,1])[0]))
+#print ("1 0 = {0:.10f}".format(mlp.run([1,0])[0]))
+#print ("1 1 = {0:.10f}".format(mlp.run([1,1])[0]))
